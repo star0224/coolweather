@@ -1,6 +1,7 @@
 package com.xin.coolweather;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -90,6 +91,12 @@ public class ChooseAreaFragment extends Fragment {
                 } else if (currentLevel == LEVEL_CITY) {
                     selectedCity = cities.get(position);
                     queryCountries();
+                } else if (currentLevel == LEVEL_COUNTRY) {
+                    String weatherId = countries.get(position).getWeatherId();
+                    Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                    intent.putExtra("weather_id", weatherId);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });
@@ -159,10 +166,7 @@ public class ChooseAreaFragment extends Fragment {
         } else {
             int provinceCoed = selectedProvince.getProvinceCode();
             int cityCode = selectedCity.getCityCode();
-            Log.d(TAG,  "provinceCoed : " + provinceCoed);
-            Log.d(TAG,  "cityCode : " + cityCode);
             String address = "http://guolin.tech/api/china" + "/" + provinceCoed + "/" + cityCode;
-            Log.d(TAG, address);
             queryFromServer(address, "country");
         }
     }
@@ -173,7 +177,6 @@ public class ChooseAreaFragment extends Fragment {
         HttpUtil.sendRequest(address, new Callback() {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Log.d(TAG, "onResponse: 开始响应");
                 String responseText = response.body().string();
                 boolean result = false;
                 if ("province".equals(type)) {
@@ -182,7 +185,6 @@ public class ChooseAreaFragment extends Fragment {
                     result = Utility.handleCityResponse(responseText, selectedProvince.getId());
                 } else if ("country".equals(type)) {
                     result = Utility.handleCountryResponse(responseText, selectedCity.getId());
-                    Log.d(TAG, String.valueOf(result));
                 }
                 if (result) {
                     getActivity().runOnUiThread(new Runnable() {
@@ -203,7 +205,6 @@ public class ChooseAreaFragment extends Fragment {
 
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.d(TAG, "onFailure: ");
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
