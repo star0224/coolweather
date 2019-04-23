@@ -7,7 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary">
+        android:background="@drawable/weatherbar">
 
         <TextView
             android:id="@+id/title_text"
@@ -31,5 +31,5 @@
         android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#fff" />
+        android:background="#d3d3d3" />
 </LinearLayout>
